@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <button>logout</button>
+    <script>
+        const socket = io();
+        
+        socket.on('message',message => alert(message))
+
+        //login
+        socket.emit('login',localStorage.getItem('uuid'))
+        socket.on('login',(uuid,exist) =>{
+            if(exist){
+                alert('已经登录')
+            }else{
+                localStorage.setItem('uuid',uuid)
+            }
+        })
+    </script>
+</body>
+</html>
