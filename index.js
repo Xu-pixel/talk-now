@@ -45,8 +45,16 @@ io.on('connection', socket => {
         console.log(socket.id, 'disconnect')
     })
 
-    socket.on('post', (...payload) => {
-        socket.broadcast.emit('post', ...payload)
+    socket.on('post', (roomId,...payload) => {
+        socket.to(roomId).emit('post', roomId,...payload)
+        // console.log(roomId)
+        // console.log(payload)
+    })
+
+    socket.on('joinRoom',(roomId) =>{
+        socket.join(roomId)
+        console.log(socket.id,'加入',roomId)
+        socket.emit('joinRoom','success',roomId)
     })
 })
 

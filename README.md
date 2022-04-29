@@ -2,6 +2,8 @@
 
 node
 
+**public已经打包好对应的前端页面了**
+
 安装依赖
 ```shell
 npm install
