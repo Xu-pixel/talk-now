@@ -69,6 +69,7 @@ io.on('connection', socket => {
         rooms.set(roomId, (rooms.get(roomId) || 0) + 1)
         console.log(rooms.get(roomId))
         socket.to(roomId).emit('statistic', rooms.get(roomId), roomId)
+        socket.emit('statistic', rooms.get(roomId), roomId)
     })
 })
 

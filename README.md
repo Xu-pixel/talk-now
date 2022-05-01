@@ -8,6 +8,12 @@ node
 ```shell
 npm install
 ```
+开发
+```
+node inde.js
+# 或者(需要npm install -g nodemon)
+nodemon index.js
+
 
 后台运行
 ```
