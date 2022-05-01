@@ -16,7 +16,7 @@ const { v4: genUuid } = require('uuid')
 const getIP = require('./getIP')
 
 const users = new Map()
-
+const rooms = new Map()
 
 io.on('connection', socket => {
     console.log(socket.id)
@@ -45,16 +45,30 @@ io.on('connection', socket => {
         console.log(socket.id, 'disconnect')
     })
 
-    socket.on('post', (roomId,...payload) => {
-        socket.to(roomId).emit('post', roomId,...payload)
-        // console.log(roomId)
-        // console.log(payload)
+    socket.on('disconnecting', () => {
+        socket.rooms.forEach(roomId => {
+            if(roomId === socket.id)return
+            rooms.set(roomId, rooms.get(roomId) - 1)
+            socket.to(roomId).emit('statistic', rooms.get(roomId), roomId)
+        })
     })
 
-    socket.on('joinRoom',(roomId) =>{
+    socket.on('post', (roomId, ...payload) => {
+        socket.to(roomId).emit('post', roomId, ...payload)
+    })
+
+    socket.on('joinRoom', (nickName, roomId) => {
+        if (roomId === null) return
         socket.join(roomId)
-        console.log(socket.id,'加入',roomId)
-        socket.emit('joinRoom','success',roomId)
+        console.log(socket.id, '加入', roomId)
+        socket.emit('joinRoom', 'success', roomId)
+        socket.to(roomId).emit('otherJoinRoom', nickName, roomId)
+
+
+        //记录房间人数
+        rooms.set(roomId, (rooms.get(roomId) || 0) + 1)
+        console.log(rooms.get(roomId))
+        socket.to(roomId).emit('statistic', rooms.get(roomId), roomId)
     })
 })
 
