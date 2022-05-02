@@ -19,7 +19,7 @@ const users = new Map()
 const rooms = new Map()
 
 io.on('connection', socket => {
-    console.log(socket.id)
+    // console.log(socket.id)
 
     socket.on('login', uuid => {
         if (users.has(uuid)) {
@@ -60,14 +60,14 @@ io.on('connection', socket => {
     socket.on('joinRoom', (nickName, roomId) => {
         if (roomId === null) return
         socket.join(roomId)
-        console.log(socket.id, '加入', roomId)
+        // console.log(socket.id, '加入', roomId)
         socket.emit('joinRoom', 'success', roomId)
         socket.to(roomId).emit('otherJoinRoom', nickName, roomId)
 
 
         //记录房间人数
         rooms.set(roomId, (rooms.get(roomId) || 0) + 1)
-        console.log(rooms.get(roomId))
+        // console.log(rooms.get(roomId))
         socket.to(roomId).emit('statistic', rooms.get(roomId), roomId)
         socket.emit('statistic', rooms.get(roomId), roomId)
     })
